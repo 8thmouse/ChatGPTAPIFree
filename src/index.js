@@ -6,7 +6,7 @@ import fetch from 'node-fetch';
 
 const port = parseInt(process.env.PORT || '8080', 10);
 // const api_keys = JSON.parse(process.env.API_KEYS);
-const api_keys = "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";
+const api_keys = "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";
 const upstreamUrl = 'https://api.openai.com/v1/chat/completions';
 
 const corsHeaders = {
@@ -25,6 +25,7 @@ app.disable('x-powered-by');
 app.use(express.json());
 
 app.use((err, req, res, next) => {
+  console.log('22222222222')
   if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
     return res.status(400).set(corsHeaders).type('text/plain').send(err.message);
   }
@@ -32,10 +33,12 @@ app.use((err, req, res, next) => {
 });
 
 const handleOptions = (req, res) => {
+  console.log(req,res,upstreamUrl)
   res.setHeader('Access-Control-Max-Age', '1728000').set(corsHeaders).sendStatus(204);
 };
 
 const handlePost = async (req, res) => {
+  console.log(req,res,upstreamUrl)
   const contentType = req.headers['content-type'];
   if (!contentType || contentType !== 'application/json') {
     return res.status(415).set(corsHeaders).type('text/plain').send("Unsupported media type. Use 'application/json' content type");
@@ -96,9 +99,11 @@ app.options('/v1/chat/completions', handleOptions);
 app.post('/v1/chat/completions', handlePost);
 
 app.use('*', (req, res) => {
+  console.log('3333333333')
   res.status(404).set(corsHeaders).type('text/plain').send('Not found');
 });
 
 app.listen(port, () => {
+  console.log('111111111')
   console.log(`Server listening on port ${port}`);
 });
